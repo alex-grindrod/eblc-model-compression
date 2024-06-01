@@ -21,3 +21,5 @@ def cifar10_loader(train=True, num_workers=1):
     else:
         loader = DataLoader(dataset, batch_size=100, shuffle=False, num_workers=num_workers, persistent_workers=True)
         return loader
+
+#Add ur own ones if u guys want
