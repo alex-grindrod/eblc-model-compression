@@ -6,9 +6,24 @@ import pickle
 import os
 import zfpy
 import copy
-import zipfile
-import numpy as np
-import io
+
+
+def zfp_compress(model, name="generic_model_type", tolerance=1e-3):
+    zfp_model = copy.deepcopy(model)
+
+    org_size = save_pkl(f'models/{name}.pkl', model.state_dict())
+    print(f"Original Size: {org_size}")
+
+    compressed_params = apply_zfp(model, tolerance)
+    compressed_size = save_pkl(f"models/{name}.pkl", compressed_params)
+    print(f"Compressed Size: {compressed_size}")
+
+    load_and_decompress(f"models/{name}.pkl", zfp_model)
+
+    return zfp_model, org_size, compressed_size
+
+
+#HELPERS
 
 def save_pkl(file: str, state_dict: dict) -> float:
     with open(file, 'wb') as f:
@@ -35,43 +50,4 @@ def load_and_decompress(file: str, model) -> None:
             decompressed = zfpy.decompress_numpy(params[name])
             param.data = torch.tensor(decompressed).to(device)
 
-def zfp_compress(model, name, tolerance=1e-3):
-    zfp_model = copy.deepcopy(model)
 
-    org_size = save_pkl(f'models/{name}.pkl', model.state_dict())
-    print(f"Original Size: {org_size}")
-
-    compressed_params = apply_zfp(model, tolerance)
-    compressed_size = save_pkl(f"models/{name}.pkl", compressed_params)
-    print(f"Compressed Size: {compressed_size}")
-
-    load_and_decompress(f"models/{name}.pkl", zfp_model)
-
-    return zfp_model, org_size, compressed_size
-
-
-
-
-# def apply_zip(model):
-#     params = dict()
-#     for name, param in model.named_parameters():
-#         if param.requires_grad:
-#             param_cpu = param.cpu().detach().numpy()
-
-#             array_buffer = io.BytesIO()
-#             np.save(array_buffer, param_cpu)
-
-
-#             # params[name] = zfpy.compress_numpy(param_cpu, tolerance=tolerance)
-#     return params
-
-# def zip_compress(model, name):
-#     zip_model = copy.deepcopy(model)
-
-#     pkl_path = f'models/{name}.pkl'
-#     org_size = save_pkl(pkl_path, model.state_dict())
-
-
-
-
-    
