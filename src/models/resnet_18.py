@@ -38,8 +38,8 @@ class ResNetLightning(pl.LightningModule):
         loss = F.cross_entropy(logits, y)
         preds = torch.argmax(logits, dim=1)
         accuracy = torch.sum(preds == y).float() / len(y)
-        # self.log('test_loss', loss)
-        # self.log('test_acc', accuracy)
+        self.log('test_loss', loss)
+        self.log('test_acc', accuracy)
         return {'test_loss': loss, 'test_acc': accuracy}
 
     
