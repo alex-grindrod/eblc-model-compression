@@ -5,7 +5,7 @@ EBLC - Error Bounded Lossy Compression. EBLC refers to any compression algorithm
 
 ZFP is an EBLC algorithm with parameters such as Tolerance and Precision to enforce control over data loss. 
 In this Project, we wanted to observe how well ZFP performs in compressing the weights of various ML model architectures like:
-- VGG
+- VGG (11 & 19)
 - ResNet
 - Bert
   
